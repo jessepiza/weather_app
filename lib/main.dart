@@ -9,9 +9,10 @@ void main() {
 }
 
 class App extends StatelessWidget{
+
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return const GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'TriquiTriqui',
         home: HomePage()
