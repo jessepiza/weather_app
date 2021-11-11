@@ -14,7 +14,7 @@ class App extends StatelessWidget{
   Widget build(BuildContext context) {
     return const GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'TriquiTriqui',
+        title: 'WeatherApp',
         home: HomePage()
     );
   }

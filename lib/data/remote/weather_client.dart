@@ -6,31 +6,32 @@ import 'package:weather_app/data/model/weather.dart';
 class WeatherClient {
   static const baseUrl = "https://api.openweathermap.org/data/2.5/weather";
   static const appid = "d5abe3d816a237c5f52019701508dd84";
-  final String id;
+  final dynamic id;
   WeatherClient(this.id);
-
-  Future<Weather> getItems(String topic) async {
+  Future<Weather> getWeather() async {
     var uri = Uri.parse(baseUrl)
         .resolveUri(Uri(queryParameters: {
-      "id": id,
+      "id": id.toString(),
       "units": "metric",
       "appid": appid
     }));
-
     try {
-      final response = await http.get(uri).timeout(const Duration(seconds: 1));
+      final response = await http.get(uri);
       if (response.statusCode == 200) {
         var jsonResponse = convert.jsonDecode(response.body);
         dynamic id = jsonResponse['id'];
         String name = jsonResponse['name'];
-        String description = jsonResponse['weather']['description'];
-        dynamic temp = jsonResponse['main']['temp'];
-        dynamic feelsLike = jsonResponse['main']['feels_like'];
-        dynamic humidity = jsonResponse['main']['humidity'];
+        var weatherDescription = jsonResponse['weather'];
+        String main = weatherDescription[0]['main'];
+        var description = weatherDescription[0]['description'];
+        double temp = jsonResponse['main']['temp'];
+        
+        double feelsLike = jsonResponse['main']['feels_like'];
+        int humidity = jsonResponse['main']['humidity'];
         dynamic windSpeed = jsonResponse['wind']['speed'];
-        dynamic pressure = jsonResponse['main']['pressure'];
+        int pressure = jsonResponse['main']['pressure'];
 
-        Weather weather = Weather(id: id, name: name, description: description, temp: temp, feelsLike: feelsLike, humidity: humidity, windSpeed: windSpeed, pressure: pressure);
+        Weather weather = Weather(id: id, name: name, description: description, temp: temp, feelsLike: feelsLike, humidity: humidity, windSpeed: windSpeed, pressure: pressure, main:main);
         return weather;
       } else {
         return Future.error([]);

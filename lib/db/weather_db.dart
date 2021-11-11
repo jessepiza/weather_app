@@ -21,13 +21,18 @@ class WeatherDB{
   Future<Database> _openDB() async{
     return openDatabase(
       join(await getDatabasesPath(), 'weather_database.db'),
-      onCreate: (db, version) {
+      onCreate: (db, version) async {
+        // return await db.transaction((txn) async {
+        //       await txn.execute('''
+        //       CREATE TABLE weather_city(id INT PRIMARY KEY, name TEXT)
+        //       ''');
+        // });
         return db.execute(
-          "CREATE TABLE weather_city(id INT PRIMARY KEY, name TEXT, temp REAL, description TEXT, feels_like REAL, humidity REAL, wind_speed REAL, pressure REAL)",
+          "CREATE TABLE weather_city(id INT PRIMARY KEY, name TEXT)",
         );
       },
       version:1,
-    ) as Database;
+    );
   }
 
   Future<void> insertWeatherCity(Weather weatherCity) async {
@@ -39,22 +44,13 @@ class WeatherDB{
     );
   }
 
-  Future<List<Weather>> weatherCity() async {
+  Future<List<String>> weatherCity() async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query('weather_city');
 
     return List.generate(maps.length, (i) {
-      return Weather(
-        id: maps[i]['id'],
-        name: maps[i]['name'],
-        temp: maps[i]['temp'],
-        description: maps[i]['description'],
-        feelsLike: maps[i]['feels_like'],
-        humidity: maps[i]['humidity'],
-        windSpeed: maps[i]['wind_speed'],
-        pressure: maps[i]['pressure'],
-      );
-    });
+      return  maps[i]['name'];}
+    );
   }
 
   Future<void> updateWeatherCity(Weather weatherCity) async {

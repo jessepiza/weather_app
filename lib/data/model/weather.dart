@@ -1,13 +1,13 @@
 class Weather {
   dynamic id;
   String? name;
-  dynamic temp;
+  double? temp;
   String? description;
-  dynamic feelsLike;
-  dynamic humidity;
+  double? feelsLike;
+  int? humidity;
   dynamic windSpeed;
-  // ignore: unnecessary_question_mark
-  dynamic? pressure;
+  int? pressure;
+  String? main;
 
   Weather({required this.id,
            required this.name, 
@@ -16,7 +16,8 @@ class Weather {
            required this.feelsLike,
            required this.humidity,
            required this.windSpeed,
-           required this.pressure});
+           required this.pressure,
+           required this.main});
 
   Map<String, dynamic> toMap() {
     return {
@@ -27,7 +28,8 @@ class Weather {
       'feels_like': feelsLike,
       'humidity': humidity,
       'wind_speed': windSpeed,
-      'pressure' : pressure
+      'pressure' : pressure,
+      'main' : main,
     };
   }
 
@@ -40,6 +42,7 @@ class Weather {
     humidity = json['humidity'];
     windSpeed = json['wind_speed'];
     pressure = json['pressure'];
+    main = json['main'];
   }
 
   Map<String, dynamic> toJson() {
@@ -52,6 +55,7 @@ class Weather {
     data['humidity'] = humidity;
     data['wind_speed'] = windSpeed;
     data['pressure'] = pressure;
+    data['main'] = main;
     return data;
   }
 }

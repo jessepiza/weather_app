@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_app/domain/weather_controller.dart';
+import 'package:weather_app/presentation/screens/search_screen.dart';
 
 class HomePage extends StatelessWidget {
 
@@ -13,10 +15,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    http.Response response;
     Size size = MediaQuery.of(context).size;
     WeatherController weatherController = Get.find();
-    return Scaffold(
+    dynamic id = 3688689;
+    weatherController.updateWeather(id);
+    Timer.periodic(const Duration(hours: 1), (Timer t) => weatherController.updateWeather(id));
+    return Obx(()=>Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -39,32 +43,43 @@ class HomePage extends StatelessWidget {
                 height: size.height/20,
                 decoration: BoxDecoration(
                     color: Colors.white, borderRadius: BorderRadius.circular(29)),
-                    child: const TextField(
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      icon: Icon(
-                        Icons.search,
-                        color: Colors.black,
-                      ),
-                      hintText: 'Search city',
-                      border: InputBorder.none,
-                    ),
-                  ),
+                    child:  GestureDetector(
+                          child: TextField(
+                          obscureText: false,
+                          decoration: const InputDecoration(
+                            icon: Icon(
+                              Icons.search,
+                              color:Colors.black,),
+                            hintText: 'Search city',
+                            border: InputBorder.none,
+                          ),
+                          onTap: () {Get.to(const SearchPage());},
+                          
+                        )
+                        
+                    )
+                      
+                  //   const TextField(
+                  //   obscureText: false,
+                  //   decoration: InputDecoration(
+                  //     icon: Icon(
+                  //       Icons.search,
+                  //       color: Colors.black,
+                  //     ),
+                  //     hintText: 'Search city',
+                  //     border: InputBorder.none,
+                  //   ),
+                  //   onTap: () {Get.to(const SearchPage());},
+                  // ),
               ),
-              IconButton(onPressed: () async =>{
-                  weatherController.initDB()
-                // response = await http.get(Uri.parse("https://api.openweathermap.org/data/2.5/weather?id=833&units=metric&appid=d5abe3d816a237c5f52019701508dd84")),
-                // // ignore: avoid_print
-                // print(jsonDecode(response.body)['name'])
-
-                }, 
+              IconButton(onPressed: () async =>{                }, 
               padding: const EdgeInsets.only(right: 2, left: 5),
               icon: const Icon(Icons.add, color: Colors.white, size: 40,))
             ],
           
           ),
           SizedBox(height: size.height*0.1,),
-          Text('Bogotá', textAlign: TextAlign.center, 
+          Text(weatherController.city, textAlign: TextAlign.center, 
                 style: GoogleFonts.rubik(color: Colors.white, fontSize: 40, 
                 shadows: <Shadow>[
                   const Shadow(
@@ -73,7 +88,7 @@ class HomePage extends StatelessWidget {
                     color: Colors.grey,
                   ),
                 ],)),
-          Text(' 19°', textAlign: TextAlign.center, 
+          Text('${weatherController.temp}°', textAlign: TextAlign.center, 
                 style: GoogleFonts.rubik(color: Colors.white, fontSize: 100, 
                 shadows: <Shadow>[
                   const Shadow(
@@ -83,7 +98,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ],)),
           SizedBox(height: size.height/15,),
-          Text('Broken Clouds', textAlign: TextAlign.center, 
+          Text(weatherController.description, textAlign: TextAlign.center, 
                 style: GoogleFonts.rubik(color: Colors.white, fontSize: 25, 
                 shadows: <Shadow>[
                   const Shadow(
@@ -119,10 +134,10 @@ class HomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text('19°C', textAlign: TextAlign.center, 
+                        Text('${weatherController.feelsLike}°C', textAlign: TextAlign.center, 
                         style: GoogleFonts.rubik(color: Colors.white, fontSize: 30, 
                         )),
-                        Text('  82%', textAlign: TextAlign.center, 
+                        Text('  ${weatherController.humidity}%', textAlign: TextAlign.center, 
                         style: GoogleFonts.rubik(color: Colors.white, fontSize: 30, 
                         )),
                       ],
@@ -142,10 +157,10 @@ class HomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text('13.0 km/h', textAlign: TextAlign.center, 
+                        Text('${weatherController.windSpeed}km/h', textAlign: TextAlign.center, 
                         style: GoogleFonts.rubik(color: Colors.white, fontSize: 30, 
                         )),
-                        Text('1024mb', textAlign: TextAlign.center, 
+                        Text('${weatherController.pressure}mb', textAlign: TextAlign.center, 
                         style: GoogleFonts.rubik(color: Colors.white, fontSize: 30, 
                         )),
                       ],
@@ -165,7 +180,7 @@ class HomePage extends StatelessWidget {
           
         ],
       ) ,
-      )
+      ))
     );
   }
 }
