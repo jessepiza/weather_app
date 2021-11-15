@@ -37,9 +37,10 @@ class WeatherDB{
 
   Future<void> insertWeatherCity(Weather weatherCity) async {
     final db = await instance.database;
+    Map<String, dynamic>  map = {'id': weatherCity.id, 'name': weatherCity.name};
     await db.insert(
       'weather_city',
-      weatherCity.toMap(),
+      map,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
@@ -55,9 +56,10 @@ class WeatherDB{
 
   Future<void> updateWeatherCity(Weather weatherCity) async {
     final db = await instance.database;
+    Map<String, dynamic>  map = {'id': weatherCity.id, 'name': weatherCity.name};
     await db.update(
       'weather_city',
-      weatherCity.toMap(),
+      map,
        where: "id = ?",
       whereArgs: [weatherCity.id],
     );

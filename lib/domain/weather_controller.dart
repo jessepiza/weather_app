@@ -38,7 +38,7 @@ class WeatherController extends GetxController {
       var jsonResponse = convert.jsonDecode(response);
 
       for (var i in jsonResponse){
-        Weather weatherCity = Weather(id: i['id'], name: '', temp: 0.0, description: '', feelsLike: 0.0, humidity: 0, windSpeed: 0.0, pressure: 0, main: '');
+        Weather weatherCity = Weather(id: i['id'], name: i['name'], temp: 0.0, description: '', feelsLike: 0.0, humidity: 0, windSpeed: 0.0, pressure: 0, main: '');
         try{
           database.insertWeatherCity(weatherCity);
         }on Exception catch (_){
@@ -49,25 +49,24 @@ class WeatherController extends GetxController {
   }
 
   Future<List<String>> listCity() async {
+    initDB();
     Database database = await WeatherDB.instance.database;
     List<Map> res = await database.rawQuery(
                                         "SELECT name FROM weather_city");
-
     return List<String>.generate(res.length, (i) {for (var q in res){q['name'];}return '';});
   }
 
   Future<void> updateWeather(dynamic newId) async {
-    WeatherDB database = await WeatherDB.instance;
     WeatherClient weatherClient = WeatherClient(newId);
     Weather weatherCity = await weatherClient.getWeather();
     _id.value = newId;
-    _temp.value = weatherCity.temp!;
+    _temp.value = double.parse(weatherCity.temp.toString());
     _city.value = weatherCity.name!;
     _description.value = weatherCity.description!;
-    _feelsLike.value = weatherCity.feelsLike!;
-    _windSpeed.value = weatherCity.windSpeed!;
-    _humidity.value = weatherCity.humidity!;
-    _pressure.value = weatherCity.pressure!;
+    _feelsLike.value = double.parse(weatherCity.feelsLike.toString());
+    _windSpeed.value = double.parse(weatherCity.windSpeed.toString());
+    _humidity.value = int.parse(weatherCity.humidity.toString());
+    _pressure.value = int.parse(weatherCity.pressure.toString());
 
     if (weatherCity.main == 'Clear'){
       _background.value = 'assets/backgrounds/clear_sky.png';

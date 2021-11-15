@@ -9,7 +9,7 @@ void main() {
 }
 
 class App extends StatelessWidget{
-
+  WeatherController weatherController = Get.find();
   @override
   Widget build(BuildContext context) {
     return const GetMaterialApp(

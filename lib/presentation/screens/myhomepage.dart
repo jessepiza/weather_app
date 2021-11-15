@@ -17,14 +17,15 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     WeatherController weatherController = Get.find();
-    dynamic id = 3688689;
+    // weatherController.initDB();
+    dynamic id = 3688685;
     weatherController.updateWeather(id);
     Timer.periodic(const Duration(hours: 1), (Timer t) => weatherController.updateWeather(id));
     return Obx(()=>Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/backgrounds/clear_sky.png'),
+            image: AssetImage(weatherController.background),
             fit: BoxFit.fill,
           ),
         ),
@@ -53,7 +54,7 @@ class HomePage extends StatelessWidget {
                             hintText: 'Search city',
                             border: InputBorder.none,
                           ),
-                          onTap: () {Get.to(const SearchPage());},
+                          onTap: () {Get.to(()=> SearchPage());},
                           
                         )
                         
