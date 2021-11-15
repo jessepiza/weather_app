@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_app/domain/weather_controller.dart';
+import 'package:weather_app/presentation/screens/favorite_screen.dart';
 import 'package:weather_app/presentation/screens/search_screen.dart';
 
 class HomePage extends StatelessWidget {
@@ -17,11 +18,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     WeatherController weatherController = Get.find();
-    // weatherController.initDB();
-    dynamic id = 3688685;
-    weatherController.updateWeather(id);
-    Timer.periodic(const Duration(hours: 1), (Timer t) => weatherController.updateWeather(id));
+    weatherController.updateWeather(weatherController.id);
+    Timer.periodic(const Duration(hours: 1), (Timer t) => weatherController.updateWeather(weatherController.id));
     return Obx(()=>Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
             fit: BoxFit.fill,
           ),
         ),
-      child: //SingleChildScrollView(child:             
+      child:             
            Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -46,6 +46,7 @@ class HomePage extends StatelessWidget {
                     color: Colors.white, borderRadius: BorderRadius.circular(29)),
                     child:  GestureDetector(
                           child: TextField(
+                          autofocus: false,
                           obscureText: false,
                           decoration: const InputDecoration(
                             icon: Icon(
@@ -59,23 +60,10 @@ class HomePage extends StatelessWidget {
                         )
                         
                     )
-                      
-                  //   const TextField(
-                  //   obscureText: false,
-                  //   decoration: InputDecoration(
-                  //     icon: Icon(
-                  //       Icons.search,
-                  //       color: Colors.black,
-                  //     ),
-                  //     hintText: 'Search city',
-                  //     border: InputBorder.none,
-                  //   ),
-                  //   onTap: () {Get.to(const SearchPage());},
-                  // ),
               ),
-              IconButton(onPressed: () async =>{                }, 
-              padding: const EdgeInsets.only(right: 2, left: 5),
-              icon: const Icon(Icons.add, color: Colors.white, size: 40,))
+              IconButton(onPressed: (){Get.to(()=> const FavoritePage());}, 
+                              padding: const EdgeInsets.only(right: 2, left: 5),
+                              icon: const Icon(Icons.favorite_border, color: Colors.white, size: 40,))
             ],
           
           ),
@@ -164,21 +152,14 @@ class HomePage extends StatelessWidget {
                         Text('${weatherController.pressure}mb', textAlign: TextAlign.center, 
                         style: GoogleFonts.rubik(color: Colors.white, fontSize: 30, 
                         )),
+
                       ],
+                      
                     ),
+                    
                   ],
                 ),
-          ),
-          
-          // BorderedText(
-          //       strokeWidth: 2,
-          //       strokeColor: Colors.grey.withOpacity(0.8),
-          //       child: const Text('Broken Clouds', textAlign: TextAlign.center, 
-          //       style: GoogleFonts.oswald(color: Colors.white))
-          //       )
-                // style: TextStyle(fontSize: 25, color: Colors.white, decorationColor: Colors.black)
-            
-          
+          ),         
         ],
       ) ,
       ))

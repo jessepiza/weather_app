@@ -8,7 +8,7 @@ import 'package:weather_app/db/weather_db.dart';
 import 'dart:async';
 
 class WeatherController extends GetxController {
-  final _id = 0.obs;
+  final _id = 3688685.obs;
   final _temp = 0.0.obs;
   final _city = ''.obs;
   final _description = ''.obs;
@@ -18,6 +18,8 @@ class WeatherController extends GetxController {
   final _pressure = 0.obs;
   final _listCities = [].obs;
   final _background = 'assets/backgrounds/clear_sky.png'.obs;
+  final _savedWords = [].obs;
+  final _mapData = {}.obs;
 
   dynamic get id => _id.value;
   double get temp => _temp.value;
@@ -29,8 +31,25 @@ class WeatherController extends GetxController {
   int get pressure => _pressure.value;
   List<String> get listCities => [... _listCities];
   String get background => _background.value;
+  List<String> get savedWords => [... _savedWords];
+  Map<String, dynamic> get mapData => {... _mapData};
 
-  // var timer = Timer.periodic(const Duration(seconds: 5), (Timer t) => updateWeather(_id.value));
+  void saveNewWord(String newWord){
+    _savedWords.add(newWord);
+  }
+
+  void saveMapData(Map<String, dynamic> newMapData){
+    _mapData.addAll(newMapData);
+  }
+
+  void updateId(dynamic newId){
+    _id.value = newId;
+    updateWeather(newId);
+  }
+
+  void deleteNewWord(String newWord){
+    _savedWords.remove(newWord);
+  }
 
   Future<void> initDB() async {
     WeatherDB database = WeatherDB.instance;
@@ -89,7 +108,6 @@ class WeatherController extends GetxController {
     else{
       _background.value = 'assets/backgrounds/clouds.png';
     }
-    // database.updateWeatherCity(weatherCity);
   }
 
 
